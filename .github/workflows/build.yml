@@ -1,4 +1,4 @@
-name: Patch and Build
+name: Folia Build
 
 on: push
 
