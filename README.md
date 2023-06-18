@@ -12,7 +12,7 @@
 #### 最新版本
 进入[Releases](https://github.com/alazeprt/Folia/releases/tag/latest)界面，找到下方的Assets，其中folia-bundler-x.x.x-SNAPSHOT-mojmap.jar是带Minecraft官方服务端的Folia服务端，其中folia-paperclip-x.x.x-SNAPSHOT-mojmap.jar是不带Minecraft官方服务端的Folia服务端（启动后会自动开始下载Minecraft官方服务端），project.tar是已经applyPatches的Folia源项目。
 #### 旧版本
-每个旧版本都会有一个分支（例如1.19.4对应的分支为ver/1.19），最新版本的分支则是master。首先点击Actions打开工作流界面，接着点击搜索框，搜索你所需的版本（例如1.19.4就是搜索branch:ver/1.19，搜索时前面加branch意思是指搜索指定的分支），然后选择最靠上面且是打勾的一项，点进去，向下滑找到“Artifacts”，然后点击下方的“Artifacts”下载构建好的包，下载完之后解压，解压完之后会有几个文件，其中folia-bundler-x.x.x-SNAPSHOT-mojmap.jar是带Minecraft官方服务端的Folia服务端，其中folia-paperclip-x.x.x-SNAPSHOT-mojmap.jar是不带Minecraft官方服务端的Folia服务端（启动后会自动开始下载Minecraft官方服务端）。
+每个旧版本都会有一个分支（例如1.19.4对应的分支为ver/1.19），最新版本的分支则是master。首先点击[Actions](https://github.com/alazeprt/Folia/actions)打开工作流界面，接着点击搜索框，搜索你所需的版本（例如1.19.4就是搜索branch:ver/1.19，搜索时前面加branch意思是指搜索指定的分支），然后选择最靠上面且是打勾的一项，点进去，向下滑找到“Artifacts”，然后点击下方的“Artifacts”下载构建好的包，下载完之后解压，解压完之后会有几个文件，其中folia-bundler-x.x.x-SNAPSHOT-mojmap.jar是带Minecraft官方服务端的Folia服务端，其中folia-paperclip-x.x.x-SNAPSHOT-mojmap.jar是不带Minecraft官方服务端的Folia服务端（启动后会自动开始下载Minecraft官方服务端）。
 
 
 ## 概述
