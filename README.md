@@ -5,8 +5,15 @@
 </div>
 
 ## 关于本项目
+### 概述
 ##### 本项目是由alazeprt fork PaperMC/Folia 的二次品，原库[PaperMC/Folia](https://github.com/PaperMC/Folia)
 本项目提供了Folia中README的汉化，且提供了构建好的Folia成品，正所谓“一寸光阴一寸金，寸金难买寸光阴”，时间就是金钱，谁也不想花那么多时间在构建上，但是由于国内访问境外网站速度实在太慢，且总会进不去（我自己构建时因git无法访问Github烦了好久），更别说新手，可能连构建都不会，所以我便创建了此项目，让任何人都可以直接下载Folia服务端的成品，不需要花费过多时间用在构建上。
+### 下载
+#### 最新版本
+进入[Releases](https://github.com/alazeprt/Folia/releases/tag/latest)界面，找到下方的Assets，其中folia-bundler-x.x.x-SNAPSHOT-mojmap.jar是带Minecraft官方服务端的Folia服务端，其中folia-paperclip-x.x.x-SNAPSHOT-mojmap.jar是不带Minecraft官方服务端的Folia服务端（启动后会自动开始下载Minecraft官方服务端），project.tar是已经applyPatches的Folia源项目。
+#### 旧版本
+每个旧版本都会有一个分支（例如1.19.4对应的分支为ver/1.19），最新版本的分支则是master。首先点击Actions打开工作流界面，接着点击搜索框，搜索你所需的版本（例如1.19.4就是搜索branch:ver/1.19，搜索时前面加branch意思是指搜索指定的分支），然后选择最靠上面且是打勾的一项，点进去，向下滑找到“Artifacts”，然后点击下方的“Artifacts”下载构建好的包，下载完之后解压，解压完之后会有几个文件，其中folia-bundler-x.x.x-SNAPSHOT-mojmap.jar是带Minecraft官方服务端的Folia服务端，其中folia-paperclip-x.x.x-SNAPSHOT-mojmap.jar是不带Minecraft官方服务端的Folia服务端（启动后会自动开始下载Minecraft官方服务端）。
+
 
 ## 概述
 
@@ -57,120 +64,67 @@ Folia也是一个独立的项目，Folia在未来将不会与Paper合并。
 
 尚未决定是将此API直接添加到Paper本身还是添加到Paperlib。
 
-### The new rules
+### 新的规则
 
-First, Folia breaks many plugins. To aid users in figuring out which
-plugins work, only plugins that have been explicitly marked by the
-author(s) to work with Folia will be loaded. By placing
-"folia-supported: true" into the plugin's plugin.yml, plugin authors
-can mark their plugin as compatible with regionised multithreading.
+首先，Folia破坏了许多插件。为了帮助用户弄清楚哪些插件可以工作，只会加载作者明确标记为可以使用Folia的插件。通过将“folia-supported:true”配置项添加到插件的plugin.yml中，就可以让插件兼容Folia服务端。
 
-The other important rule is that the regions tick in _parallel_, and not 
-_concurrently_. They do not share data, they do not expect to share data,
-and sharing of data _will_ cause data corruption. 
-Code that is running in one region under no circumstance can 
-be accessing or modifying data that is in another region. Just 
-because multithreading is in the name, it doesn't mean that everything 
-is now thread-safe. In fact, there are only a _few_ things that were 
-made thread-safe to make this happen. As time goes on, the number 
-of thread context checks will only grow, even _if_ it comes at a 
-performance penalty - _nobody_ is going to use or develop for a 
-server platform that is buggy as hell, and the only way to 
-prevent and find these bugs is to make bad accesses fail _hard_ at the 
-source of the bad access.
+另一个重要的规则是区域在 _paralle_ 中打勾，而不是 _concurrently_。他们不共享数据，也不希望共享数据，共享数据将导致数据损坏。在任何情况下都不能访问或修改在一个区域中运行的代码。仅仅因为名称中包含了多线程，并不意味着现在一切都是线程安全的。事实上，只有一件事是线程安全的，才能实现这一点。随着时间的推移，线程上下文检查的数量只会增加，即使这会带来性能损失——没有人会使用或开发一个漏洞严重的服务端，而防止和发现这些漏洞的唯一方法就是从错误的源头使错误访问不会出现。
 
-This means that Folia compatible plugins need to take advantage of 
-API like the RegionScheduler and the EntityScheduler to ensure 
-their code is running on the correct thread context.
+这意味着与Folia兼容的插件需要利用RegionScheduler和EntityScheduler等API，以确保其代码在正确的线程上下文上运行。
 
-In general, it is safe to assume that a region owns chunk data
-in an approximate 8 chunks from the source of an event (i.e. player
-breaks block, can probably access 8 chunks around that block). But,
-this is not guaranteed - plugins should take advantage of upcoming
-thread-check API to ensure correct behavior.
+通常，可以安全地假设一个区域拥有来自事件源的大约8个区块中的方块数据（即，玩家打破方块，可能可以访问该块周围的8个方块）。但是，这并不能保证插件应该利用即将推出的线程检查API来确保正确的行为。
 
-The only guarantee of thread-safety comes from the fact that a
-single region owns data in certain chunks - and if that region is
-ticking, then it has full access to that data. This data is 
-specifically entity/chunk/poi data, and is entirely unrelated
-to **ANY** plugin data.
+线程安全的唯一保证来自于一个区域拥有特定区块中的数据这一事实——如果该区域正在运行，那么它就可以完全访问该数据。这些数据是实体/区块/poi数据，与**任何**插件数据完全无关。
 
-Normal multithreading rules apply to data that plugins store/access
-their own data or another plugin's - events/commands/etc. are called 
-in _parallel_ because regions are ticking in _parallel_ (we CANNOT 
-call them in a synchronous fashion, as this opens up deadlock issues 
-and would handicap performance). There are no easy ways out of this, 
-it depends solely on what data is being accessed. Sometimes a 
-concurrent collection (like ConcurrentHashMap) is enough, and often a 
-concurrent collection used carelessly will only _hide_ threading 
-issues, which then become near impossible to debug.
+正常的多线程规则适用于插件存储/访问自己的数据或其他插件的数据（事件/命令等）。在_parallel_中被调用，因为区域在_parallel_中ticking（我们不能以同步方式调用它们，因为这会引发死锁问题并阻碍性能）。没有简单的方法可以解决这个问题，这完全取决于访问的数据。有时一个并发集合（如ConcurrentHashMap）就足够了，而且通常一个不小心使用的并发集合只会引发线程问题，而这些问题几乎无法调试。
 
-### Current API additions
+### 当前添加的API
 
-To properly understand API additions, please read
-[Project overview](https://docs.papermc.io/folia/reference/overview).
+要正确理解API添加内容，请阅读[项目概述](https://docs.papermc.io/folia/reference/overview).
 
-- RegionScheduler, AsyncScheduler, GlobalRegionScheduler, and EntityScheduler 
-  acting as a replacement for  the BukkitScheduler.
-  The entity scheduler is retrieved via Entity#getScheduler, and the
-  rest of the schedulers can be retrieved from the Bukkit/Server classes.
-- Bukkit#isOwnedByCurrentRegion to test if the current ticking region
-  owns positions/entities
+- RegionScheduler、AsyncScheduler、GlobalRegionScheduler和EntityScheduler替代BukkitScheduler。实体调度器通过Entity#getScheduler检索，其余调度器可以从Bukkit/Server类检索。
+- Bukkit#isOwnedByCurrentRegion测试当前ticking区域是否拥有位置/实体
 
-### Thread contexts for API
+### 线程的API上下文
 
-To properly understand API additions, please read
-[Project overview](https://docs.papermc.io/folia/reference/overview).
+要正确理解API添加内容，请阅读[项目概述](https://docs.papermc.io/folia/reference/overview).
 
-General rules of thumb:
+一般经验法则：
 
-1. Commands for entities/players are called on the region which owns
-the entity/player. Console commands are executed on the global region.
+1. 实体/玩家的命令在拥有实体/玩家所在的区域调用。控制台命令在全局区域上执行。
 
-2. Events involving a single entity (i.e player breaks/places block) are
-called on the region owning entity. Events involving actions on an entity
-(such as entity damage) are invoked on the region owning the target entity.
+2. 涉及单个实体的事件（即玩家休息/放置方块）在区域拥有实体上调用。在拥有目标实体的区域上调用涉及实体上的操作（例如实体受攻击）的事件。
 
-3. The async modifier for events is deprecated - all events
-fired from regions or the global region are considered _synchronous_, 
-even though there is no main thread anymore. 
+3. 不赞成使用事件的async修饰符——从区域或全局区域激发的所有事件都被认为是同步的，即使不再有主线程。
 
-### Current broken API
+### 当前损坏的API
 
-- Most API that interacts with portals / respawning players / some
-  player login API is broken.
-- ALL scoreboard API is considered broken (this is global state that
-  I've not figured out how to properly implement yet)
-- World loading/unloading
-- Entity#teleport. This will NEVER UNDER ANY CIRCUMSTANCE come back, 
-  use teleportAsync
-- Could be more
+- 与交互有关的大多数API（例如：实体穿过传送门/玩家重生/玩家加入服务器）已损坏。
+- 所有记分板API都被认为是坏的（这是全局状态，我还没有弄清楚如何正确实现）
+- 世界加载/卸载
+- Entity#teleport。这不再回来，请使用teleportAsync替代
+- 可能有更多
 
-### Planned API additions
+### 计划添加的API
 
-- Proper asynchronous events. This would allow the result of an event
-  to be completed later, on a different thread context. This is required
-  to implement some things like spawn position select, as asynchronous
-  chunk loads are required when accessing chunk data out-of-region.
-- World loading/unloading
+- 适当的异步事件。这将允许稍后在不同的线程上下文中完成事件。这是实现诸如设置生成位置之类的一些事件所需要的，因为在区域外访问区块数据时需要异步块加载。
+- 世界加载/卸载
+- 将会有更多
+
+### 计划修改的API 
+
+- 进行超强的线程检查。这是绝对必要的，以防止插件开发人员发送可能以完全不可识别的方式随机破坏服务器随机部分的代码。
 - More to come here
 
-### Planned API changes
-
-- Super aggressive thread checks across the board. This is absolutely
-  required to prevent plugin devs from shipping code that may randomly
-  break random parts of the server in entirely _undiagnosable_ manners.
-- More to come here
-
-### Maven information
-* Maven Repo (for folia-api):
+### Maven 信息
+* Maven Repo (用于 folia-api):
 ```xml
 <repository>
     <id>papermc</id>
     <url>https://repo.papermc.io/repository/maven-public/</url>
 </repository>
 ```
-* Artifact Information:
+* 工件信息:
 ```xml
 <dependency>
     <groupId>dev.folia</groupId>
@@ -181,10 +135,5 @@ even though there is no main thread anymore.
  ```
 
 
-## License
-The PATCHES-LICENSE file describes the license for api & server patches,
-found in `./patches` and its subdirectories except when noted otherwise.
-
-The fork is based off of PaperMC's fork example found [here](https://github.com/PaperMC/paperweight-examples).
-As such, it contains modifications to it in this project, please see the repository for license information
-of modified files.
+## 协议
+PATCHES-LICENSE文件描述了api和服务器补丁程序的许可证，位于“/patches”及其子目录，除非另有说明。
