@@ -4,7 +4,9 @@
     <p><a href="https://github.com/PaperMC/Paper">Paper</a>的分支, 将区域化多线程添加到服务器</p>
 </div>
 
-#### 注：此库是由alazeprt fork PaperMC/Folia 的二次品，原库[PaperMC/Folia](https://github.com/PaperMC/Folia)
+## 关于本项目
+##### 本项目是由alazeprt fork PaperMC/Folia 的二次品，原库[PaperMC/Folia](https://github.com/PaperMC/Folia)
+本项目提供了Folia中README的汉化，且提供了构建好的Folia成品，正所谓“一寸光阴一寸金，寸金难买寸光阴”，时间就是金钱，谁也不想花那么多时间在构建上，但是由于国内访问境外网站速度实在太慢，且总会进不去（我自己构建时因git无法访问Github烦了好久），更别说新手，可能连构建都不会，所以我便创建了此项目，让任何人都可以直接下载Folia服务端的成品，不需要花费过多时间用在构建上。
 
 ## 概述
 
@@ -38,43 +40,22 @@ Folia也是一个独立的项目，Folia在未来将不会与Paper合并。
 在所有这些分配之后，系统上的剩余核心直到80%可以分配（分配的线程总数<可用cpu的80%）可以
 分配给tickthreads（在全局配置下，配置项为：threaded-regions.threads）。
 
-The reason you should not allocate more than 80% of the cores is due to the
-fact that plugins or even the server may make use of additional threads 
-that you cannot configure or even predict.
+不应分配超过80%的核心的原因是：插件甚至服务
+可能会使用额外的线程,您无法配置甚至无法预测。
 
-Additionally, the above is all a rough guess based on player count, but
-it is very likely that the thread allocation will not be ideal, and you 
-will need to tune it based on usage of the threads that you end up seeing.
+此外，以上都是基于玩家数量的粗略猜测，但线程分配结果很可能不理想，你需要根据您最终看到的线程的使用情况对其进行调优。
 
-## Plugin compatibility
+## 插件兼容性
 
-There is no more main thread. I expect _every_ single plugin
-that exists to require _some_ level of modification to function
-in Folia. Additionally, multithreading of _any kind_ introduces
-possible race conditions in plugin held data - so, there are bound
-to be changes that need to be made.
+此服务端没有更多的主线程了，我希望存在的每一个插件都需要一定程度的修改才能在Folia中发挥作用，此外，任何类型的多线程都会在插件持有的数据中引入可能的竞争条件，因此，必然需要进行更改。
 
-So, have your expectations for compatibility at 0.
+因此，请将你对插件兼容性的期望值设置为0。
 
-## API plans
+## API计划
 
-Currently, there is a lot of API that relies on the main thread. 
-I expect basically zero plugins that are compatible with Paper to 
-be compatible with Folia. However, there are plans to add API that 
-would allow Folia plugins to be compatible with Paper.
+目前，有很多API依赖于主线程。我希望基本上没有任何与Paper兼容的插件与Folia兼容。然而，当前有计划添加API，使Folia插件与Paper兼容。例如，Bukkit Scheduler。Bukkit Scheduler依赖于单个主线程。Folia的RegionScheduler和Folia的EntityScheduler允许将任务安排到“下一个tick”，这些可以在常规Paper服务端上实现，除非他们调度到主线程。在这两种情况下，任务的执行都将发生在“拥有”位置或实体的线程上。这一概念适用于一般情况，因为当前的Paper服务端（单线程）可以被视为一个巨大的“区域”，涵盖了所有世界中的所有区块。
 
-For example, the Bukkit Scheduler. The Bukkit Scheduler inherently
-relies on a single main thread. Folia's RegionScheduler and Folia's
-EntityScheduler allow scheduling of tasks to the "next tick" of whatever
-region "owns" either a location or an entity. These could be implemented
-on regular Paper, except they schedule to the main thread - in both cases,
-the execution of the task will occur on the thread that "owns" the
-location or entity. This concept applies in general, as the current Paper
-(single threaded) can be viewed as one giant "region" that encompasses
-all chunks in all worlds. 
-
-It is not yet decided whether to add this API to Paper itself directly
-or to Paperlib.
+尚未决定是将此API直接添加到Paper本身还是添加到Paperlib。
 
 ### The new rules
 
