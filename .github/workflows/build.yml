@@ -1,9 +1,6 @@
 name: Patch and Build
 
-on:
-  push:
-    branches: [ "**" ]
-  pull_request:
+on: push
 
 jobs:
   build:
@@ -24,7 +21,19 @@ jobs:
           java-version: '17'
       - name: Configure Git User Details
         run: git config --global user.email "actions@github.com" && git config --global user.name "Github Actions"
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
       - name: Apply Patches
         run: ./gradlew applyPatches
       - name: Build
         run: ./gradlew build
+      - name: publishToMavenLocal
+        run: ./gradlew publishToMavenLocal
+      - name: createMojmapPaperclipJar
+        run: ./gradlew createMojmapPaperclipJar
+      - name: capture build artifacts
+        if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
+        uses: actions/upload-artifact@v3
+        with:
+          name: solar_mod_artifacts
+          path: build/libs/
