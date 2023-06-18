@@ -4,6 +4,8 @@
     <p><a href="https://github.com/PaperMC/Paper">Paper</a>的分支, 将区域化多线程添加到服务器</p>
 </div>
 
+#### 注：此库是由alazeprt fork PaperMC/Folia 的二次品，原库[PaperMC/Folia](https://github.com/PaperMC/Folia)
+
 ## 概述
 
 Folia 将附近已加载的区块分组形成一块“独立区域”，有关Folia如何对附近的区块进行分组的详细信息，请见[PaperMC 文档](https://docs.papermc.io/folia/reference/region-logic)。
@@ -18,38 +20,23 @@ Folia也是一个独立的项目，Folia在未来将不会与Paper合并。
 ## FAQ
 
 ### 哪些服务器类型可以从Folia中受益？
-Server types that naturally spread players out, 
-like skyblock or SMP, will benefit the most from Folia. The server
-should have a sizeable player count, too.
+自然分散玩家的服务器类型，如skyblock或SMP，将从Folia中受益最大。服务器也应该有相当数量的玩家。
 
-### What hardware will Folia run best on?
-Ideally, at least 16 _cores_ (not threads).
+### Folia在什么硬件配置上运行最好？
+建议CPU至少有16个核心（不是线程）运行服务器。
 
-### How to best configure Folia?
-First, it is recommended that the world is pre-generated so that the number
-of chunk system worker threads required is reduced greatly.
+### 如何最好的配置Folia？
+首先，建议预生成区块，以便大大减少所需的区块工作线程的数量。
+以下是一个*非常粗略*的估计，使用Folia在我们的测试服务器上进行测试，该服务器的峰值玩家约为330人。因此，它并不准确，需要进一步调整——只是把它作为一个起点。
 
-The following is a _very rough_ estimation based off of the testing
-done before Folia was released on the test server we ran that
-had ~330 players peak. So, it is not exact and will require further tuning - 
-just take it as a starting point.
+应考虑机器上可用的核心的总数。然后，为以下各项分配线程：
+- 净IO：每4核心200-300玩家
+- 区块系统IO线程：每3核心200-300玩家
+- 区块系统工作程序（如果预先生成）：每2核心200-300玩家
+- 如果不是预先生成的，就没有对区块系统工作程序的最佳猜测，因为在我们运行的测试服务器上，我们提供了16个线程，但区块生成仍然是只有300人左右。
 
-The total number of cores on the machine available should be 
-taken into account. Then, allocate threads for: 
-- netty IO :~4 per 200-300 players
-- chunk system io threads: ~3 per 200-300 players
-- chunk system workers if pre-generated, ~2 per 200-300 players
-- There is no best guess for chunk system workers if not pre-generated, as
-  on the test server we ran we gave 16 threads but chunk generation was still
-  slow at ~300 players.
-- GC Settings: ???? But, GC settings _do_ allocate concurrent threads, and you need
-  to know exactly how many. This is typically through the `-XX:ConcGCThreads=n` flag. Do not
-  confuse this flag with `-XX:ParallelGCThreads=n`, as parallel GC threads only run when
-  the application is paused by GC and as such should not be taken into account.
-
-After all of that allocation, the remaining cores on the system until 80%
-allocation (total threads allocated < 80% of cpus available) can be
-allocated to tickthreads (under global config, threaded-regions.threads). 
+在所有这些分配之后，系统上的剩余核心直到80%可以分配（分配的线程总数<可用cpu的80%）可以
+分配给tickthreads（在全局配置下，配置项为：threaded-regions.threads）。
 
 The reason you should not allocate more than 80% of the cores is due to the
 fact that plugins or even the server may make use of additional threads 
