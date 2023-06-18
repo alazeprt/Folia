@@ -13,7 +13,13 @@
 进入[Releases](https://github.com/alazeprt/Folia/releases/tag/latest)界面，找到下方的Assets，其中folia-bundler-x.x.x-SNAPSHOT-mojmap.jar是带Minecraft官方服务端的Folia服务端，其中folia-paperclip-x.x.x-SNAPSHOT-mojmap.jar是不带Minecraft官方服务端的Folia服务端（启动后会自动开始下载Minecraft官方服务端），project.tar是已经applyPatches的Folia源项目。
 #### 旧版本
 每个旧版本都会有一个分支（例如1.19.4对应的分支为ver/1.19），最新版本的分支则是master。首先点击[Actions](https://github.com/alazeprt/Folia/actions)打开工作流界面，接着点击搜索框，搜索你所需的版本（例如1.19.4就是搜索branch:ver/1.19，搜索时前面加branch意思是指搜索指定的分支），然后选择最靠上面且是打勾的一项，点进去，向下滑找到“Artifacts”，然后点击下方的“Artifacts”下载构建好的包，下载完之后解压，解压完之后会有几个文件，其中folia-bundler-x.x.x-SNAPSHOT-mojmap.jar是带Minecraft官方服务端的Folia服务端，其中folia-paperclip-x.x.x-SNAPSHOT-mojmap.jar是不带Minecraft官方服务端的Folia服务端（启动后会自动开始下载Minecraft官方服务端）。
-
+#### Github下载加速
+在中国大陆内，Github下载速度十分缓慢（我一般只有几十kb每秒），所以需要一些加速的方法，我们可以在Releases中找到我们需要下载的东西(**注意: 此加速方法无法加速Artifacts**)，右键我们需要下载的东西，点击”复制链接“按钮，复制到的链接应是类似这样的：https://github.com/alazeprt/Folia/releases/download/latest/folia-paperclip-1.20.1-R0.1-SNAPSHOT-mojmap.jar
+<br>
+接着我们在复制的链接前加上https://gh.ddlc.top/，例如：
+https://gh.ddlc.top/https://github.com/alazeprt/Folia/releases/download/latest/folia-paperclip-1.20.1-R0.1-SNAPSHOT-mojmap.jar
+<br>
+接着我们把这整个链接粘贴到浏览器地址栏，按下回车，就会开始下载了（速度一般1-3MB/s左右）。
 
 ## 概述
 
