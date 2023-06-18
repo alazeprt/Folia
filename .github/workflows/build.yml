@@ -23,6 +23,8 @@ jobs:
         run: chmod +x ./gradlew
       - name: Apply Patches
         run: ./gradlew applyPatches
+      - name: Compress All Files
+        run: tar -cvf project.tar ./*
       - name: Build
         run: ./gradlew build
       - name: publishToMavenLocal
@@ -33,7 +35,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Artifacts
-          path: build/libs/
+          path: |
+            build/libs/
       - name: automatic releases
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
@@ -43,3 +46,4 @@ jobs:
           title: "PaperMC/Folia 自动构建最新版本"
           files: |
             build/libs/*.*
+            project.tar
