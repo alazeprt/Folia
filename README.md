@@ -1,32 +1,23 @@
 <div align=center>
     <img src="./folia.png">
     <br /><br />
-    <p>Fork of <a href="https://github.com/PaperMC/Paper">Paper</a> which adds regionised multithreading to the dedicated server.</p>
+    <p><a href="https://github.com/PaperMC/Paper">Paper</a>的分支, 将区域化多线程添加到服务器</p>
 </div>
 
-## Overview
+## 概述
 
-Folia groups nearby loaded chunks to form an "independent region."
-See [the PaperMC documentation](https://docs.papermc.io/folia/reference/region-logic) for exact details on how Folia
-will group nearby chunks.
-Each independent region has its own tick loop, which is ticked at the
-regular Minecraft tickrate (20TPS). The tick loops are executed
-on a thread pool in parallel. There is no main thread anymore, 
-as each region effectively has its own "main thread" that executes
-the entire tick loop.
+Folia 将附近已加载的区块分组形成一块“独立区域”，有关Folia如何对附近的区块进行分组的详细信息，请见[PaperMC 文档](https://docs.papermc.io/folia/reference/region-logic)。
+每个“独立区域”都有自己的tick循环，在常规的Minecraft Tickrate（20TPS）。这些tick循环并行地在线程池上。不再有主线，因为每个区域都有自己tick循环。
 
-For a server with many spread out players, Folia will create many
-spread out regions and tick them all in parallel on a configurable sized
-threadpool. Thus, Folia should scale well for servers like this.
+对于具有许多分散玩家的服务器，Folia将创建许多“独立区域”，并并行勾选它们的线程池（~~这里实在不知道怎么理解~~）。因此，Folia应该可以很好地扩展这样的服务器。
 
-Folia is also its own project, this will not be merged into Paper
-for the foreseeable future. 
+Folia也是一个独立的项目，Folia在未来将不会与Paper合并。 
 
-A more detailed but abstract overview: [Project overview](https://docs.papermc.io/folia/reference/overview).
+更详细~~但抽象~~的概述: [Project overview](https://docs.papermc.io/folia/reference/overview).
 
 ## FAQ
 
-### What server types can benefit from Folia?
+### 哪些服务器类型可以从Folia中受益？
 Server types that naturally spread players out, 
 like skyblock or SMP, will benefit the most from Folia. The server
 should have a sizeable player count, too.
