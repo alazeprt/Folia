@@ -23,8 +23,10 @@ jobs:
         run: chmod +x ./gradlew
       - name: Apply Patches
         run: ./gradlew applyPatches
+      - name: Compress All Files
+        run: tar -cvf project.tar ./*
       - name: capture build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Artifacts
-          path: /
+          path: project.tar
