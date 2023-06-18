@@ -44,4 +44,4 @@ jobs:
           prerelease: false
           title: "PaperMC/Folia 自动构建最新版本"
           files: |
-            build/libs/*.jar
+            plugin/build/libs/*.jar
