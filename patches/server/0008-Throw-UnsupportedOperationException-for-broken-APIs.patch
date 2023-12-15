@@ -5,10 +5,10 @@ Subject: [PATCH] Throw UnsupportedOperationException() for broken APIs
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index a6ba1d101dc23b8c27a1498f3f0d21270dfcc18c..a8bf1f542ab20eb7c40c80b5e42b55982677373d 100644
+index 541915675dd3ad832992360283e3ba1b3cc62e27..bc778637c7d4371cafa9bcda67f8965f57cc66d6 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1284,6 +1284,7 @@ public final class CraftServer implements Server {
+@@ -1268,6 +1268,7 @@ public final class CraftServer implements Server {
  
      @Override
      public World createWorld(WorldCreator creator) {
@@ -16,7 +16,7 @@ index a6ba1d101dc23b8c27a1498f3f0d21270dfcc18c..a8bf1f542ab20eb7c40c80b5e42b5598
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1425,6 +1426,7 @@ public final class CraftServer implements Server {
+@@ -1410,6 +1411,7 @@ public final class CraftServer implements Server {
  
      @Override
      public boolean unloadWorld(World world, boolean save) {
@@ -53,7 +53,7 @@ index a8c5bfc54ed2b8bd873f124c7080d73fe73a86ad..f59e9e6dd21a7d034b5e3b6e7787458d
          this.board.setDisplayObjective(CraftScoreboardTranslations.fromBukkitSlot(slot), null);
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftScoreboardManager.java b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftScoreboardManager.java
-index 500f2eb0df5a07637cd278c263e95592b0037eb6..7ab760a57d1305bc4dccec97526328972c2ddfc3 100644
+index 891f850ea99dac1433f3e395e26be14c8abf2bfb..345ee10b109b9b3d7343d915f6bd6b95704cdf60 100644
 --- a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftScoreboardManager.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftScoreboardManager.java
 @@ -42,6 +42,7 @@ public final class CraftScoreboardManager implements ScoreboardManager {
