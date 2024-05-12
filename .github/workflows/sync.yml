@@ -1,16 +1,17 @@
-name: Sync Fork
+name: 同步上游仓库
 
 on:
-  push: # push 时触发, 主要是为了测试配置有没有问题
   schedule:
-    - cron: '0 * * * *'
+    - cron: '*/30 * * * *' # every 30 minutes
+  workflow_dispatch: # on button click
+
 jobs:
-  repo-sync:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: TG908/fork-sync@v1.6.3
+      - uses: tgymnich/fork-sync@v1.8
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          owner: ZhaoUncle # fork 的上游仓库 user
-          head: main # fork 的上游仓库 branch
-          base: main # 本地仓库 branch
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          owner: alazeprt
+          base: master
+          head: master
